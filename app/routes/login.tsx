@@ -6,7 +6,6 @@ import {
     NavLink,
 } from "@remix-run/react";
 import { redirect, json, ActionFunctionArgs } from "@remix-run/node";
-import { supabaseClient } from "~/database/db.server";
 import { commitSession, getSession } from "~/utils/session.server";
 
 export let action = async ({ request }: ActionFunctionArgs) => {
@@ -15,41 +14,9 @@ export let action = async ({ request }: ActionFunctionArgs) => {
     let email = form.get("email");
     let password = form.get("password");
 
-    // login using the credentials
-    const { data: user, error } = await supabaseClient.auth.signIn({
-        email,
-        password,
-    });
-
-    // if i have a user then create the cookie with the
-    // auth_token, not sure if i want to use the auth token,
-    // but it works... will do more research
-    if (user) {
-        // get session and set access_token
-        let session = await getSession(request.headers.get("Cookie"));
-        session.set("access_token", user.access_token);
-
-        // redirect to page with the cookie set in header
-        return redirect("/", {
-            headers: {
-                "Set-Cookie": await commitSession(session),
-            },
-        });
-    }
-
-    // else return the error
-    return { user, error };
+    return null;
 };
 
-// https://remix.run/api/conventions#meta
-export let meta = () => {
-    return {
-        title: "Remix Supabase Starter",
-        description: "Welcome to remix! Login Page",
-    };
-};
-
-// https://remix.run/guides/routing#index-routes
 export default function Login() {
     const actionData = useActionData();
 
