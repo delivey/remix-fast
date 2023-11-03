@@ -9,7 +9,9 @@ import { supabase } from "~/database/db.server";
 import { commitSession, getSession } from "~/utils/session.server";
 import { Auth } from "@supabase/auth-ui-react";
 import { Button } from "~/components/ui/button";
-
+import { Input } from "~/components/ui/input";
+import { ValidatedForm } from "remix-validated-form";
+import { validator } from "~/validators/signup";
 export let action = async ({ request }: ActionFunctionArgs) => {
     let form = await request.formData();
     let email = form.get("email") as string;
@@ -29,8 +31,11 @@ export default function CreateAccount() {
     const actionData = useActionData();
     const data: any = useLoaderData();
     return (
-        <div>
-            <Button>test</Button>
-        </div>
+        <ValidatedForm validator={validator}>
+            <Input placeholder="Email" />
+            <Input placeholder="Password" />
+            <Input placeholder="Confirm password" />
+            <Button>Sign up</Button>
+        </ValidatedForm>
     );
 }
